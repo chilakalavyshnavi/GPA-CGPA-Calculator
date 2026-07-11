@@ -68,19 +68,14 @@ Everything is calculated locally in the browser and persisted with `localStorage
 
 ## 🖼️ Screenshots
 
-> Add your own screenshots here after running the app locally.
+### Semester GPA Calculator
+![Semester GPA](docs/screenshots/semester-gpa.png)
 
-| Semester GPA | CGPA Tracker | What-If Simulator |
-|---|---|---|
-| `docs/screenshots/semester-gpa.png` | `docs/screenshots/cgpa.png` | `docs/screenshots/simulator.png` |
+### CGPA Tracker
+![CGPA Tracker](docs/screenshots/cgpa.png)
 
-### 📱 Responsive Preview
-
-| Desktop | Tablet | Mobile |
-|---|---|---|
-| `docs/screenshots/desktop.png` | `docs/screenshots/tablet.png` | `docs/screenshots/mobile.png` |
-
----
+### What-If Simulator
+![What-If Simulator](docs/screenshots/simulator.png)
 
 ## 🚀 Installation
 
