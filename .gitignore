@@ -1,0 +1,27 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor / IDE
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Dependency directories (kept for future tooling, e.g. Live Server extensions)
+node_modules/
+
+# Local env files
+.env
+.env.local
+
+# Build output (if a bundler is ever introduced)
+dist/
+build/
+
+# Exported user backups / reports (not meant to be committed)
+*.pdf
+gpa-backup-*.json

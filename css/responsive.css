@@ -1,0 +1,38 @@
+/* =========================================================
+   Responsive breakpoints
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .stats-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .stat-value { font-size: 1.5rem; }
+  .app-container { padding: 24px 16px 48px; }
+}
+
+@media (max-width: 768px) {
+  .navbar-tabs { display: none; }
+  .hamburger-btn { display: flex; }
+  .navbar { padding: 14px 18px; }
+
+  .view-header { flex-direction: column; align-items: flex-start; }
+  .header-actions { width: 100%; }
+  .header-actions .btn { flex: 1; justify-content: center; }
+
+  .stats-grid { grid-template-columns: 1fr; }
+
+  .form-row { flex-direction: column; align-items: stretch; }
+  .form-group { min-width: 0; }
+
+  .card { padding: 20px; }
+
+  .button-row { flex-direction: column; }
+  .button-row .btn { justify-content: center; }
+}
+
+@media (max-width: 480px) {
+  .navbar-brand span:not(.accent) { display: none; }
+  .navbar-brand .accent { display: inline; }
+  .stat-value { font-size: 1.4rem; }
+  .data-table thead th, .data-table tbody td { padding: 8px 8px; font-size: 0.82rem; }
+  .toast-container { left: 12px; right: 12px; bottom: 12px; }
+  .toast { min-width: 0; width: 100%; }
+}

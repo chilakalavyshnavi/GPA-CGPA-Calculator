@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GPA / CGPA Calculator | Student Dashboard</title>
+<meta name="description" content="A modern, offline GPA and CGPA calculator with a What-If graduation simulator." />
+
+<!-- Font Awesome (icons) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+<!-- Google Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- App styles -->
+<link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="css/responsive.css" />
+<link rel="stylesheet" href="css/animations.css" />
+
+<!-- jsPDF (export to PDF) - CDN, loaded only for the export feature -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+</head>
+<body>
+
+  <!-- ===================== LOADER ===================== -->
+  <div id="loader" class="loader-overlay" aria-hidden="true">
+    <div class="loader-spinner"></div>
+  </div>
+
+  <!-- ===================== TOP NAVIGATION ===================== -->
+  <header class="navbar">
+    <div class="navbar-brand">
+      <i class="fa-solid fa-graduation-cap"></i>
+      <span>GPA<span class="accent">Studio</span></span>
+    </div>
+
+    <nav class="navbar-tabs" id="navbarTabs" role="tablist" aria-label="Main navigation">
+      <button class="nav-tab active" data-target="semester-view" role="tab" aria-selected="true">
+        <i class="fa-solid fa-book"></i><span>Semester GPA</span>
+      </button>
+      <button class="nav-tab" data-target="cgpa-view" role="tab" aria-selected="false">
+        <i class="fa-solid fa-chart-line"></i><span>CGPA</span>
+      </button>
+      <button class="nav-tab" data-target="simulator-view" role="tab" aria-selected="false">
+        <i class="fa-solid fa-flask"></i><span>What-If</span>
+      </button>
+    </nav>
+
+    <div class="navbar-actions">
+      <button id="themeToggle" class="icon-btn" title="Toggle dark mode (Ctrl+D)">
+        <i class="fa-solid fa-moon"></i>
+      </button>
+      <button id="hamburgerBtn" class="icon-btn hamburger-btn" title="Menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile nav drawer -->
+  <div id="mobileDrawer" class="mobile-drawer">
+    <button class="nav-tab" data-target="semester-view"><i class="fa-solid fa-book"></i> Semester GPA</button>
+    <button class="nav-tab" data-target="cgpa-view"><i class="fa-solid fa-chart-line"></i> CGPA</button>
+    <button class="nav-tab" data-target="simulator-view"><i class="fa-solid fa-flask"></i> What-If Simulator</button>
+  </div>
+
+  <main class="app-container">
+
+    <!-- ===================== SEMESTER GPA VIEW ===================== -->
+    <section id="semester-view" class="view active">
+      <div class="view-header">
+        <div>
+          <h1>Semester GPA Calculator</h1>
+          <p class="subtitle">Add your subjects, credits and grades to calculate this semester's GPA.</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-ghost" id="clearSemesterBtn"><i class="fa-solid fa-broom"></i> Clear</button>
+          <button class="btn btn-primary" id="addSubjectBtn"><i class="fa-solid fa-plus"></i> Add Subject</button>
+        </div>
+      </div>
+
+      <div class="card glass-card">
+        <div class="table-wrapper">
+          <table class="data-table" id="subjectsTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Subject Name</th>
+                <th>Credits</th>
+                <th>Grade</th>
+                <th>Grade Points</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="subjectsTbody">
+              <!-- rows injected by ui.js -->
+            </tbody>
+          </table>
+        </div>
+        <div id="subjectsEmptyState" class="empty-state">
+          <i class="fa-solid fa-inbox"></i>
+          <p>No subjects added yet. Click "Add Subject" to begin.</p>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card glass-card">
+          <span class="stat-label">Total Credits</span>
+          <span class="stat-value" id="totalCreditsStat">0</span>
+        </div>
+        <div class="stat-card glass-card">
+          <span class="stat-label">Total Grade Points</span>
+          <span class="stat-value" id="totalGradePointsStat">0.00</span>
+        </div>
+        <div class="stat-card glass-card highlight">
+          <span class="stat-label">Semester GPA</span>
+          <span class="stat-value" id="semesterGpaStat">0.00</span>
+        </div>
+      </div>
+
+      <div class="card glass-card save-semester-card">
+        <h3><i class="fa-solid fa-floppy-disk"></i> Save this Semester to CGPA</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="semesterNameInput">Semester Name</label>
+            <input type="text" id="semesterNameInput" placeholder="e.g. Semester 3" />
+          </div>
+          <button class="btn btn-primary" id="saveSemesterBtn">
+            <i class="fa-solid fa-save"></i> Save Semester
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== CGPA VIEW ===================== -->
+    <section id="cgpa-view" class="view">
+      <div class="view-header">
+        <div>
+          <h1>Cumulative GPA (CGPA)</h1>
+          <p class="subtitle">All saved semesters combine here to calculate your overall CGPA.</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-ghost" id="clearCgpaBtn"><i class="fa-solid fa-trash"></i> Clear All</button>
+        </div>
+      </div>
+
+      <div class="card glass-card">
+        <div class="table-wrapper">
+          <table class="data-table" id="semestersTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Semester</th>
+                <th>Credits</th>
+                <th>GPA</th>
+                <th>Grade Points</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="semestersTbody"></tbody>
+          </table>
+        </div>
+        <div id="semestersEmptyState" class="empty-state">
+          <i class="fa-solid fa-layer-group"></i>
+          <p>No semesters saved yet. Save a semester from the Semester GPA tab.</p>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card glass-card">
+          <span class="stat-label">Total Credits</span>
+          <span class="stat-value" id="cgpaTotalCreditsStat">0</span>
+        </div>
+        <div class="stat-card glass-card">
+          <span class="stat-label">Total Grade Points</span>
+          <span class="stat-value" id="cgpaTotalGradePointsStat">0.00</span>
+        </div>
+        <div class="stat-card glass-card highlight">
+          <span class="stat-label">Overall CGPA</span>
+          <span class="stat-value" id="overallCgpaStat">0.00</span>
+        </div>
+      </div>
+
+      <div class="card glass-card export-card">
+        <h3><i class="fa-solid fa-file-export"></i> Export &amp; Backup</h3>
+        <div class="button-row">
+          <button class="btn btn-secondary" id="exportPdfBtn"><i class="fa-solid fa-file-pdf"></i> Export PDF</button>
+          <button class="btn btn-secondary" id="printBtn"><i class="fa-solid fa-print"></i> Print</button>
+          <button class="btn btn-secondary" id="exportJsonBtn"><i class="fa-solid fa-download"></i> Export JSON</button>
+          <label class="btn btn-secondary" for="importJsonInput">
+            <i class="fa-solid fa-upload"></i> Import JSON
+          </label>
+          <input type="file" id="importJsonInput" accept="application/json" hidden />
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== WHAT-IF SIMULATOR VIEW ===================== -->
+    <section id="simulator-view" class="view">
+      <div class="view-header">
+        <div>
+          <h1>What-If CGPA Simulator</h1>
+          <p class="subtitle">Predict your graduation CGPA based on future semester performance.</p>
+        </div>
+      </div>
+
+      <div class="card glass-card">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="simCurrentCgpa">Current CGPA</label>
+            <input type="number" id="simCurrentCgpa" min="0" max="10" step="0.01" placeholder="e.g. 8.20" />
+          </div>
+          <div class="form-group">
+            <label for="simCompletedCredits">Completed Credits</label>
+            <input type="number" id="simCompletedCredits" min="0" step="0.5" placeholder="e.g. 90" />
+          </div>
+          <div class="form-group">
+            <label for="simRemainingSemesters">Remaining Semesters</label>
+            <input type="number" id="simRemainingSemesters" min="1" max="20" step="1" placeholder="e.g. 4" />
+          </div>
+          <button class="btn btn-primary" id="generateSemestersBtn">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Generate
+          </button>
+        </div>
+        <p class="hint-text">
+          <i class="fa-solid fa-circle-info"></i>
+          Use your CGPA scale's normal load (e.g. ~20-24 credits/semester) as a rough default; you can edit each row below.
+        </p>
+      </div>
+
+      <div class="card glass-card">
+        <div class="table-wrapper">
+          <table class="data-table" id="simSemestersTable">
+            <thead>
+              <tr>
+                <th>Future Semester</th>
+                <th>Expected Credits</th>
+                <th>Expected GPA</th>
+              </tr>
+            </thead>
+            <tbody id="simSemestersTbody"></tbody>
+          </table>
+        </div>
+        <div id="simEmptyState" class="empty-state">
+          <i class="fa-solid fa-flask-vial"></i>
+          <p>Enter your details above and click "Generate" to build your simulation rows.</p>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card glass-card">
+          <span class="stat-label">Total Credits (incl. future)</span>
+          <span class="stat-value" id="simTotalCreditsStat">0</span>
+        </div>
+        <div class="stat-card glass-card highlight">
+          <span class="stat-label">Predicted Graduation CGPA</span>
+          <span class="stat-value" id="simPredictedCgpaStat">0.00</span>
+        </div>
+        <div class="stat-card glass-card" id="simImprovementCard">
+          <span class="stat-label">Change vs Current CGPA</span>
+          <span class="stat-value" id="simImprovementStat">0.00</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <p>Built with HTML, CSS &amp; vanilla JavaScript — runs 100% locally. No data leaves your browser.</p>
+  </footer>
+
+  <!-- Toast container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- Confirm dialog -->
+  <div id="confirmDialogOverlay" class="dialog-overlay">
+    <div class="dialog-box glass-card">
+      <h3 id="confirmDialogTitle">Are you sure?</h3>
+      <p id="confirmDialogMessage">This action cannot be undone.</p>
+      <div class="dialog-actions">
+        <button class="btn btn-ghost" id="confirmDialogCancel">Cancel</button>
+        <button class="btn btn-danger" id="confirmDialogOk">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- App scripts (order matters: constants/utilities first, app.js last) -->
+  <script src="js/validation.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/calculator.js"></script>
+  <script src="js/simulator.js"></script>
+  <script src="js/export.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
