@@ -11,6 +11,13 @@ A clean, modern, fully offline **GPA and CGPA calculator** with a **What-If grad
 
 ---
 
+## 🎥 Demo Video
+[Watch the demo](https://youtu.be/vpI8JaGC3JQ)
+
+
+## 🔗 Live Demo
+[Try it here](https://chilakalavyshnavi.github.io/GPA-CGPA-Calculator/)
+
 ## 📖 Overview
 
 GPA Studio helps students:
@@ -61,26 +68,21 @@ Everything is calculated locally in the browser and persisted with `localStorage
 
 ## 🖼️ Screenshots
 
-> Add your own screenshots here after running the app locally.
+### Semester GPA Calculator
+![Semester GPA](docs/screenshots/semester-gpa.png)
 
-| Semester GPA | CGPA Tracker | What-If Simulator |
-|---|---|---|
-| `docs/screenshots/semester-gpa.png` | `docs/screenshots/cgpa.png` | `docs/screenshots/simulator.png` |
+### CGPA Tracker
+![CGPA Tracker](docs/screenshots/cgpa.png)
 
-### 📱 Responsive Preview
-
-| Desktop | Tablet | Mobile |
-|---|---|---|
-| `docs/screenshots/desktop.png` | `docs/screenshots/tablet.png` | `docs/screenshots/mobile.png` |
-
----
+### What-If Simulator
+![What-If Simulator](docs/screenshots/simulator.png)
 
 ## 🚀 Installation
 
 No build step, no `npm install`. Just clone and open.
 
 ```bash
-git clone https://github.com/<your-username>/GPA-CGPA-Calculator.git
+git clone https://github.com/chilakalavyshnavi/GPA-CGPA-Calculator.git
 cd GPA-CGPA-Calculator
 ```
 
@@ -169,12 +171,13 @@ See the full [manual test checklist](#-manual-test-cases) below before each rele
 
 This project is licensed under the [MIT License](LICENSE).
 
+
 ---
 
 ## 👤 Author
 
-**[Your Name Here]**
-GitHub: [@your-username](https://github.com/your-username)
+**Vyshnavi Chilakala**
+GitHub: [chilakalavyshnavi](https://github.com/chilakalavyshnavi)
 
 ---
 
